@@ -3,20 +3,20 @@
 #include <ctime>
 #include <conio.h>
 using namespace std;
-#define getrand(a,b) (rand()%b+a)//»ñÈ¡Ëæ»úÊı
+#define getrand(a,b) (rand() % (b - a + 1) + a) //è·å–éšæœºæ•°
 
-bool randz=true;	//ÊÇ·ñËæ»úÉú³ÉÕÏ°­Îï(1Ëæ»ú 0²»Ëæ»ú) 
-int skin=0;	//ÅäÉ«£º0¾­µä 1À¶°× 2ºì°× 3ÂÌ°× 4²İµØ 5¿Æ¼¼ 6Ëæ»ú 7»ìÂÒ 8ÀËÂş 9ºÚ°× 
-char peise[10][5]={"¼òÔ¼","À¶°×","ºì°×","ÂÌ°×","²İµØ","¿Æ¼¼","Ëæ»ú","»ìÂÒ","ÀËÂş","ºÚ°×"};
-char YN[2][3]={"·ñ","ÊÇ"}; 
-int xl=20,yl=12;//µØÍ¼µÄ³¤ºÍ¿í(²»°üÀ¨±ß½ç) 
+bool randz=true;	//æ˜¯å¦éšæœºç”Ÿæˆéšœç¢ç‰©(1éšæœº 0ä¸éšæœº) 
+int skin=0;	//é…è‰²ï¼š0ç»å…¸ 1è“ç™½ 2çº¢ç™½ 3ç»¿ç™½ 4è‰åœ° 5ç§‘æŠ€ 6éšæœº 7æ··ä¹± 8æµªæ¼« 9é»‘ç™½ 
+char peise[10][5]={"ç®€çº¦","è“ç™½","çº¢ç™½","ç»¿ç™½","è‰åœ°","ç§‘æŠ€","éšæœº","æ··ä¹±","æµªæ¼«","é»‘ç™½"};
+char YN[2][3]={"å¦","æ˜¯"}; 
+int xl=20,yl=12;//åœ°å›¾çš„é•¿å’Œå®½(ä¸åŒ…æ‹¬è¾¹ç•Œ) 
 bool faster=1;
 
-int len=3;//ÉßµÄ³¤¶È 
-int food=1;//ÏÖÔÚÊÇ·ñ´æÔÚÊ³Îï 
+int len=3;//è›‡çš„é•¿åº¦ 
+int food=1;//ç°åœ¨æ˜¯å¦å­˜åœ¨é£Ÿç‰© 
 int setspeed=25;
 
-int fangxiang[5][2]=//·½Ïò 
+int fangxiang[5][2]=//æ–¹å‘ 
 {
 	{ 0, 0},
 	{ 0,-1},
@@ -25,9 +25,9 @@ int fangxiang[5][2]=//·½Ïò
 	{ 1, 0}
 };
 
-int d=2;//µ±Ç°ÉßµÄ·½Ïò 
-COORD head;//ÉßÍ·×ø±ê 
-int room[32][22];//ÓÃÓÚ´¢´æµØÍ¼ 
+int d=2;//å½“å‰è›‡çš„æ–¹å‘ 
+COORD head;//è›‡å¤´åæ ‡ 
+int room[32][22];//ç”¨äºå‚¨å­˜åœ°å›¾ 
 
 int main();
 void choose(); 
@@ -53,13 +53,13 @@ void pspace();
 int main()
 {
 	CONSOLE_CURSOR_INFO cursor_info={1,0};
-	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);//Òş²Ø¹â±ê 
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);//éšè—å…‰æ ‡ 
 
 	unsigned seed=time(0);
-    srand(seed);//ÉèÖÃËæ»úÊıÖÖ×Ó 
+    srand(seed);//è®¾ç½®éšæœºæ•°ç§å­ 
 
-    go(4,4);pdot();color(240);printf("¿ªÊ¼ÓÎÏ·");
-	go(4,7);pdot();color(15);printf("ÉèÖÃÓÎÏ·");
+    go(4,4);pdot();color(240);printf("å¼€å§‹æ¸¸æˆ");
+	go(4,7);pdot();color(15);printf("è®¾ç½®æ¸¸æˆ");
     
     int a=0;
     int key=0;
@@ -70,8 +70,8 @@ int main()
     	{
     		key=getch();
     		if(key==72||key==80) a=1-a;
-    		if(!a)  go(4,4),pdot(),color(240),printf("¿ªÊ¼ÓÎÏ·"),go(4,7),pdot(),color(15),printf("ÉèÖÃÓÎÏ·");
-    		else  go(4,4),pdot(),color(15),printf("¿ªÊ¼ÓÎÏ·"),go(4,7),pdot(),color(240),printf("ÉèÖÃÓÎÏ·");
+    		if(!a)  go(4,4),pdot(),color(240),printf("å¼€å§‹æ¸¸æˆ"),go(4,7),pdot(),color(15),printf("è®¾ç½®æ¸¸æˆ");
+    		else  go(4,4),pdot(),color(15),printf("å¼€å§‹æ¸¸æˆ"),go(4,7),pdot(),color(240),printf("è®¾ç½®æ¸¸æˆ");
 		}
 	}
     if(a)
@@ -89,25 +89,25 @@ int main()
 
 	return 0;
 } 
-void go(int x,int y)  //¹â±êÒÆ¶¯º¯Êı£¬X±íÊ¾ºá×ø±ê£¬Y±íÊ¾×İ×ø±ê¡£
+void go(int x,int y)  //å…‰æ ‡ç§»åŠ¨å‡½æ•°ï¼ŒXè¡¨ç¤ºæ¨ªåæ ‡ï¼ŒYè¡¨ç¤ºçºµåæ ‡ã€‚
 {
-    COORD coord;         //Ê¹ÓÃÍ·ÎÄ¼ş×Ô´øµÄ×ø±ê½á¹¹
-    coord.X=x*2;            //ÕâÀï½«intÀàĞÍÖµ´«¸øshort,²»¹ı³ÌĞòÖĞÉæ¼°µÄ×ø±êÖµ¾ù²»»á³¬¹ıshort·¶Î§
+    COORD coord;         //ä½¿ç”¨å¤´æ–‡ä»¶è‡ªå¸¦çš„åæ ‡ç»“æ„
+    coord.X=x*2;            //è¿™é‡Œå°†intç±»å‹å€¼ä¼ ç»™short,ä¸è¿‡ç¨‹åºä¸­æ¶‰åŠçš„åæ ‡å€¼å‡ä¸ä¼šè¶…è¿‡shortèŒƒå›´
     coord.Y=y+1;
-    HANDLE a=GetStdHandle(STD_OUTPUT_HANDLE);  //»ñµÃ±ê×¼Êä³ö¾ä±ú
-    SetConsoleCursorPosition(a,coord);         //ÒÔ±ê×¼Êä³öµÄ¾ä±úÎª²ÎÊıÉèÖÃ¿ØÖÆÌ¨¹â±ê×ø±ê
+    HANDLE a=GetStdHandle(STD_OUTPUT_HANDLE);  //è·å¾—æ ‡å‡†è¾“å‡ºå¥æŸ„
+    SetConsoleCursorPosition(a,coord);         //ä»¥æ ‡å‡†è¾“å‡ºçš„å¥æŸ„ä¸ºå‚æ•°è®¾ç½®æ§åˆ¶å°å…‰æ ‡åæ ‡
 }
 void choose()
 {
 	system("cls");
 	system("color 0F");
 	color(15);
-	go(3,2);printf("µØÍ¼³¤¶È");
-	go(3,3);printf("µØÍ¼¿í¶È");
-	go(3,4);printf("ÒÆ¶¯ËÙ¶È");
-	go(3,5);printf("ÊÇ·ñËæ»úÉú³ÉÕÏ°­Îï");
-	go(3,6);printf("ÊÇ·ñ¿ªÆô³¤°´¼ÓËÙ¹¦ÄÜ");
-	go(3,7);printf("ÅäÉ«");
+	go(3,2);printf("åœ°å›¾é•¿åº¦");
+	go(3,3);printf("åœ°å›¾å®½åº¦");
+	go(3,4);printf("ç§»åŠ¨é€Ÿåº¦");
+	go(3,5);printf("æ˜¯å¦éšæœºç”Ÿæˆéšœç¢ç‰©");
+	go(3,6);printf("æ˜¯å¦å¼€å¯é•¿æŒ‰åŠ é€ŸåŠŸèƒ½");
+	go(3,7);printf("é…è‰²");
 	
 	color(240);
 	go(14,2);printf(" <%d> ",xl);
@@ -218,60 +218,60 @@ int gaming()
 	
 	printr();
 			
-	makefood();//Éú³ÉµÚÒ»¸öÊ³Îï 
+	makefood();//ç”Ÿæˆç¬¬ä¸€ä¸ªé£Ÿç‰© 
 	food=1;
 	
 	
-	d=-5;//³õÊ¼»¯·½Ïò 
-	int speed=setspeed;go(xl*0.6,-1),color(7),printf("ËÙ¶È£º%d",returnspeed());
+	d=-5;//åˆå§‹åŒ–æ–¹å‘ 
+	int speed=setspeed;go(xl*0.6,-1),color(7),printf("é€Ÿåº¦ï¼š%d",returnspeed());
     while(room[head.X][head.Y]==-1) head.X=getrand(1,xl),head.Y=getrand(1,yl);
     room[head.X][head.Y]=len; 
-    go(xl*0.2,-1);color(15);printf("µ±Ç°³¤¶È£º%d",len); 
-	go(head.X,head.Y);phead();//´òÓ¡ÉßÍ· 
+    go(xl*0.2,-1);color(15);printf("å½“å‰é•¿åº¦ï¼š%d",len); 
+	go(head.X,head.Y);phead();//æ‰“å°è›‡å¤´ 
 	
 	while(!kbhit()) {Sleep(50);}
 	
 	int key=0;
-	int ld=d;//´¢´æÎ´¸ü¸ÄµÄ·½Ïò
+	int ld=d;//å‚¨å­˜æœªæ›´æ”¹çš„æ–¹å‘
 	bool p=0,ped=0; 
 	
 	
 	while(1)
 	{
 		key=0;
-		ld=d;//´¢´æÎ´¸ü¸ÄµÄ·½Ïò 
+		ld=d;//å‚¨å­˜æœªæ›´æ”¹çš„æ–¹å‘ 
 		p=0;
-		for(int i=1;i<=speed;i++)//·Ö¶à¸öÊ±¼äµã¼ì²â·½Ïò,¶ø²»ÊÇÖ»ÓĞÒ»¸öÊ±¼äµã,ÕâÑù¿ÉÒÔÌáÉı²Ù×÷ÊÖ¸Ğ 
+		for(int i=1;i<=speed;i++)//åˆ†å¤šä¸ªæ—¶é—´ç‚¹æ£€æµ‹æ–¹å‘,è€Œä¸æ˜¯åªæœ‰ä¸€ä¸ªæ—¶é—´ç‚¹,è¿™æ ·å¯ä»¥æå‡æ“ä½œæ‰‹æ„Ÿ 
 		{
-			if(kbhit()&&p==0)//Èç¹ûÓĞ°´¼ü°´ÏÂ 
+			if(kbhit()&&p==0)//å¦‚æœæœ‰æŒ‰é”®æŒ‰ä¸‹ 
 			{
 				p=1;
-				key=getch();//¶ÁÈ¡ 
-				if(key==224)//¶ÁÈ¡·½Ïò¼üÊ±Ğè¶ÁÈ¡Á½´Î,µÚÒ»´Î±Ø¶¨ÊÇ224,ËùÒÔÅĞ¶Ï¶ÁÈëµÄÊÇ·½Ïò¼üÊ±ÔòÔÙ¶ÁÈ¡Ò»´Î 
+				key=getch();//è¯»å– 
+				if(key==224)//è¯»å–æ–¹å‘é”®æ—¶éœ€è¯»å–ä¸¤æ¬¡,ç¬¬ä¸€æ¬¡å¿…å®šæ˜¯224,æ‰€ä»¥åˆ¤æ–­è¯»å…¥çš„æ˜¯æ–¹å‘é”®æ—¶åˆ™å†è¯»å–ä¸€æ¬¡ 
 				{
 					key=getch();
-					     if(key==72) d=1;//ÉÏ 
-					else if(key==80) d=2;//ÏÂ 
-					else if(key==75) d=3;//×ó 
-					else if(key==77) d=4;//ÓÒ				
+					     if(key==72) d=1;//ä¸Š 
+					else if(key==80) d=2;//ä¸‹ 
+					else if(key==75) d=3;//å·¦ 
+					else if(key==77) d=4;//å³				
 				}
 				
 			} 
 			Sleep(5);		
 		}
 		
-		if(ld!=d&&(ld+d==3||ld+d==7)) d=ld;//Èç¹û¸ü¸ÄºóµÄ·½ÏòÓëÔ­À´µÄ·½Ïò³åÍ»(³É·´·½Ïò),²»¸Ä±ä·½Ïò
+		if(ld!=d&&(ld+d==3||ld+d==7)) d=ld;//å¦‚æœæ›´æ”¹åçš„æ–¹å‘ä¸åŸæ¥çš„æ–¹å‘å†²çª(æˆåæ–¹å‘),ä¸æ”¹å˜æ–¹å‘
 		if(!p) ped=1;
 		if(ld!=d) ped=0; 
-		if(p&&ped&&ld==d&&faster) speed=setspeed/1.5,go(xl*0.6,-1),color(15),printf("¼ÓËÙÖĞ~~");
-		if(p==0&&ped&&ld==d||ld!=d) speed=setspeed,go(xl*0.6,-1),color(7),printf("ËÙ¶È£º%d",returnspeed());
+		if(p&&ped&&ld==d&&faster) speed=setspeed/1.5,go(xl*0.6,-1),color(15),printf("åŠ é€Ÿä¸­~~");
+		if(p==0&&ped&&ld==d||ld!=d) speed=setspeed,go(xl*0.6,-1),color(7),printf("é€Ÿåº¦ï¼š%d",returnspeed());
 		
-		move();//ÒÆ¶¯Éß 
-		if(room[head.X][head.Y]!=len)//Èç¹ûÉßÍ·Î»ÖÃµÄÊı²»µÈÓÚÉßµÄ³¤¶È(ËµÃ÷ÒÆ¶¯º¯ÊıÖĞÅĞ¶¨Îª×²µ½,Î´¸Ä±äÉßÍ·ÊıÖµ) 
+		move();//ç§»åŠ¨è›‡ 
+		if(room[head.X][head.Y]!=len)//å¦‚æœè›‡å¤´ä½ç½®çš„æ•°ä¸ç­‰äºè›‡çš„é•¿åº¦(è¯´æ˜ç§»åŠ¨å‡½æ•°ä¸­åˆ¤å®šä¸ºæ’åˆ°,æœªæ”¹å˜è›‡å¤´æ•°å€¼) 
 		{
-			go(0,yl+2);color(79);printf("Äã×²ËÀÁË£¡");
-			go(0,yl+4);pdot();color(240);printf("ÔÙÀ´Ò»´Î"); 
-			go(0,yl+5);pdot();color(15);printf("·µ»ØÖ÷½çÃæ");
+			go(0,yl+2);color(79);printf("ä½ æ’æ­»äº†ï¼");
+			go(0,yl+4);pdot();color(240);printf("å†æ¥ä¸€æ¬¡"); 
+			go(0,yl+5);pdot();color(15);printf("è¿”å›ä¸»ç•Œé¢");
 			key=0;
 			int a=0;
 			while(key!=13)
@@ -281,15 +281,15 @@ int gaming()
 				{
 					key=getch();
 					if(key==72||key==80) a=1-a;
-					if(a==0) go(0,yl+4),pdot(),color(240),printf("ÔÙÀ´Ò»´Î"),go(0,yl+5),pdot(),color(15),printf("·µ»ØÖ÷½çÃæ");
-					else go(0,yl+4),pdot(),color(15),printf("ÔÙÀ´Ò»´Î"),go(0,yl+5),pdot(),color(240),printf("·µ»ØÖ÷½çÃæ");
+					if(a==0) go(0,yl+4),pdot(),color(240),printf("å†æ¥ä¸€æ¬¡"),go(0,yl+5),pdot(),color(15),printf("è¿”å›ä¸»ç•Œé¢");
+					else go(0,yl+4),pdot(),color(15),printf("å†æ¥ä¸€æ¬¡"),go(0,yl+5),pdot(),color(240),printf("è¿”å›ä¸»ç•Œé¢");
 				}
 			}
 			
-			return a;//½áÊø³ÌĞò 
+			return a;//ç»“æŸç¨‹åº 
 		}
 		
-		if(food==0) makefood();//Èç¹û³¡ÉÏÃ»ÓĞÊ³Îï,ÔòÉú³ÉÒ»¸öÊ³Îï 
+		if(food==0) makefood();//å¦‚æœåœºä¸Šæ²¡æœ‰é£Ÿç‰©,åˆ™ç”Ÿæˆä¸€ä¸ªé£Ÿç‰© 
 		
 	}
 }
@@ -340,36 +340,36 @@ void printr()
 			{
 				go(i,j);
 				pwall();
-			}//´òÓ¡µØÍ¼
+			}//æ‰“å°åœ°å›¾
 }
 bool goout(int x,int y)
 {
 	if(x<1||y<1||x>=xl||y>=yl) return false;
 	return true;
 }
-void move()//ÉßµÄÒÆ¶¯ 
+void move()//è›‡çš„ç§»åŠ¨ 
 {
 	head.X+=fangxiang[d][0];
-	head.Y+=fangxiang[d][1];//ÉßÍ·Ïò´Ë·½ÏòÒÆ¶¯ 
-	if(room[head.X][head.Y]!=0&&room[head.X][head.Y]!=-2)//Èç¹ûÉßÍ·Î»ÖÃ²»ÊÇ¿ÕµÄ»òÊ³Îï 
+	head.Y+=fangxiang[d][1];//è›‡å¤´å‘æ­¤æ–¹å‘ç§»åŠ¨ 
+	if(room[head.X][head.Y]!=0&&room[head.X][head.Y]!=-2)//å¦‚æœè›‡å¤´ä½ç½®ä¸æ˜¯ç©ºçš„æˆ–é£Ÿç‰© 
 	{
-		return;//½áÊøº¯Êı,²»¸Ä±äroomÊı×é 
+		return;//ç»“æŸå‡½æ•°,ä¸æ”¹å˜roomæ•°ç»„ 
 	}
-	if(room[head.X][head.Y]==-2)//Èç¹ûÉßÍ·Î»ÖÃÊÇÊ³Îï 
+	if(room[head.X][head.Y]==-2)//å¦‚æœè›‡å¤´ä½ç½®æ˜¯é£Ÿç‰© 
 	{
-		len++;//³¤¶È++ 
-		food=0;//Ê³Îï×´Ì¬±äÎª²»´æÔÚ
-		go(xl*0.2,-1);color(15);printf("µ±Ç°³¤¶È£º%d",len); 
+		len++;//é•¿åº¦++ 
+		food=0;//é£Ÿç‰©çŠ¶æ€å˜ä¸ºä¸å­˜åœ¨
+		go(xl*0.2,-1);color(15);printf("å½“å‰é•¿åº¦ï¼š%d",len); 
 	}
 	for(int i=1;i<=xl+1;i++) 
-		for(int j=1;j<=yl+1;j++)//ËÑË÷ 
-			if(room[i][j]>=1)//Èç¹û´ËÎ»ÖÃÓĞÉß 
-				if(room[head.X][head.Y]!=-2)//Èç¹û´ËÎ»ÖÃ²»ÊÇÊ³Îï 
+		for(int j=1;j<=yl+1;j++)//æœç´¢ 
+			if(room[i][j]>=1)//å¦‚æœæ­¤ä½ç½®æœ‰è›‡ 
+				if(room[head.X][head.Y]!=-2)//å¦‚æœæ­¤ä½ç½®ä¸æ˜¯é£Ÿç‰© 
 				{
-					room[i][j]--;//´ËÎ»ÖÃÊıÖµ-1,Ôò´ËÎ»ÖÃÔÚÉßÖĞµÄÎ»ÖÃÍùºó±ä»¯,ÉßÎ²±äÎª¿Õ 
-					if(room[i][j]==0)//Èç¹û´ËÎ»ÖÃÊÇ±äÎª¿ÕµÄÉßÎ² 
+					room[i][j]--;//æ­¤ä½ç½®æ•°å€¼-1,åˆ™æ­¤ä½ç½®åœ¨è›‡ä¸­çš„ä½ç½®å¾€åå˜åŒ–,è›‡å°¾å˜ä¸ºç©º 
+					if(room[i][j]==0)//å¦‚æœæ­¤ä½ç½®æ˜¯å˜ä¸ºç©ºçš„è›‡å°¾ 
 					{
-						go(i,j);pspace();//Çå¿Õ 
+						go(i,j);pspace();//æ¸…ç©º 
 					}
 					if(room[i][j]==len-1)
 					{
@@ -381,21 +381,21 @@ void move()//ÉßµÄÒÆ¶¯
 					go(i,j);pbody();
 				}
 				
-	room[head.X][head.Y]=len;//ÉßÍ·´¦ÉèÎªÉßµÄ³¤¶È,Ò²¾ÍÊÇµÚ1½Ú 
-	go(head.X,head.Y);phead();//´òÓ¡ÉßÍ· 
+	room[head.X][head.Y]=len;//è›‡å¤´å¤„è®¾ä¸ºè›‡çš„é•¿åº¦,ä¹Ÿå°±æ˜¯ç¬¬1èŠ‚ 
+	go(head.X,head.Y);phead();//æ‰“å°è›‡å¤´ 
 }
-void makefood()//Éú³ÉÊ³Îï 
+void makefood()//ç”Ÿæˆé£Ÿç‰© 
 {
 	int randx=getrand(1,xl),randy=getrand(1,yl);
-	while(room[randx][randy]!=0)//Ëæ»úµÄÎ»ÖÃ²»Îª¿Õ 
+	while(room[randx][randy]!=0)//éšæœºçš„ä½ç½®ä¸ä¸ºç©º 
 	{
 		randx=getrand(1,xl); 
-		randy=getrand(1,yl);//ÖØĞÂËæ»ú 
+		randy=getrand(1,yl);//é‡æ–°éšæœº 
 	}
-	room[randx][randy]=-2;//ÉèÖÃ´ËÎ»ÖÃÎªÊ³Îï 
+	room[randx][randy]=-2;//è®¾ç½®æ­¤ä½ç½®ä¸ºé£Ÿç‰© 
 	go(randx,randy);
-	pfood();//´òÓ¡Ê³Îï 
-	food=1;//Ê³Îï×´Ì¬ÉèÎª´æÔÚ 
+	pfood();//æ‰“å°é£Ÿç‰© 
+	food=1;//é£Ÿç‰©çŠ¶æ€è®¾ä¸ºå­˜åœ¨ 
 }
 int randcolor(int c[],int n)
 {
@@ -406,33 +406,33 @@ void color(int a)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),a);
 }
 // 0, 16,  32  ,48  ,64 , 80,   96,  112 ,128 ,144 ,160 , 176    , 192 ,208,  224 ,240
-//ºÚ ÉîÀ¶ ÉîÂÌ Ç³À¶  ºì  Éî×Ï  ÍÁ»Æ Ç³»Ò Éî»Ò ÁÁÀ¶ ÁÁÂÌ  ×îµ­µÄÀ¶ ÌÒºì Ç³×Ï  Ã×»Æ  °× 
+//é»‘ æ·±è“ æ·±ç»¿ æµ…è“  çº¢  æ·±ç´«  åœŸé»„ æµ…ç° æ·±ç° äº®è“ äº®ç»¿  æœ€æ·¡çš„è“ æ¡ƒçº¢ æµ…ç´«  ç±³é»„  ç™½ 
 
 void phead()
 {
-	if(skin==0) color(15),printf("¡õ");
-	if(skin==1) color(63),printf("¡ö");
-	if(skin==2) color(79),printf("¡ö");
-	if(skin==3) color(175),printf("¡ö");
-	if(skin==4) color(175),printf("¡ö");
-	if(skin==5) color(159),printf("¡ö");
-	if(skin==6) color(getrand(2,15)*16-1),printf("¡ö");
-	if(skin==7) color(getrand(0,255)),printf("¡ö");
-	if(skin==8) color(79),printf("¡ö");
-	if(skin==9) color(120),printf("¡ö");
+	if(skin==0) color(15),printf("â–¡");
+	if(skin==1) color(63),printf("â– ");
+	if(skin==2) color(79),printf("â– ");
+	if(skin==3) color(175),printf("â– ");
+	if(skin==4) color(175),printf("â– ");
+	if(skin==5) color(159),printf("â– ");
+	if(skin==6) color(getrand(2,15)*16-1),printf("â– ");
+	if(skin==7) color(getrand(0,255)),printf("â– ");
+	if(skin==8) color(79),printf("â– ");
+	if(skin==9) color(120),printf("â– ");
 }
 void pbody()
 {
-	if(skin==0) color(15),printf("¡õ");
-	if(skin==1) color(159),printf("¡ö");
-	if(skin==2) color(79),printf("¡ö");
-	if(skin==3) color(175),printf("¡ö");
-	if(skin==4) color(175),printf("¡ö");
-	if(skin==5) color(159),printf("¡ö");
-	if(skin==6) color(getrand(2,16)*16-1),printf("¡ö");
-	if(skin==7) color(getrand(0,255)),printf("¡ö");
-	if(skin==8) color(79),printf("¡ö");
-	if(skin==9) color(120),printf("¡ö");
+	if(skin==0) color(15),printf("â–¡");
+	if(skin==1) color(159),printf("â– ");
+	if(skin==2) color(79),printf("â– ");
+	if(skin==3) color(175),printf("â– ");
+	if(skin==4) color(175),printf("â– ");
+	if(skin==5) color(159),printf("â– ");
+	if(skin==6) color(getrand(2,16)*16-1),printf("â– ");
+	if(skin==7) color(getrand(0,255)),printf("â– ");
+	if(skin==8) color(79),printf("â– ");
+	if(skin==9) color(120),printf("â– ");
 }
 void pwall()
 {
@@ -447,7 +447,7 @@ void pwall()
 	if(skin==8) color(76);
 	if(skin==9) color(127);
 
-	printf("¡ö");
+	printf("â– ");
 }
 void pfood()
 {
@@ -462,7 +462,7 @@ void pfood()
 	if(skin==8) color(4);
 	if(skin==9) color(15);
 
-	printf("¡ñ");
+	printf("â—");
 }
 void pspace()
 {
@@ -477,7 +477,7 @@ void pspace()
 	if(skin==8) color(0);
 	if(skin==9) color(0);
 
-	printf("Ò¶");
+	printf("å¶");
 }
 int returnspeed()
 {
@@ -486,5 +486,5 @@ int returnspeed()
 void pdot()
 {
 	color(15);
-	printf("¡¤");
+	printf("Â·");
 }

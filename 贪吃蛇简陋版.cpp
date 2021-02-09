@@ -1,125 +1,136 @@
-#include <bits/stdc++.h>
-#include <windows.h>
-#include <ctime>
-#include <conio.h>
+#include "stdio.h"
+#include "windows.h"
+#include "ctime"
+#include "conio.h"
 using namespace std;
 
-#define getrand(a,b) (rand()%b+a)//»ñÈ¡Ëæ»úÊı
+#define getrand(a,b) (rand() % (b - a + 1) + a)//è·å–éšæœºæ•°
 
-int len=10;//ÉßµÄ³¤¶È 
-int food=1;//ÏÖÔÚÊÇ·ñ´æÔÚÊ³Îï 
-int fangxiang[5][2]={{ 0, 0},{ 0,-1},{ 0, 1},{-1, 0},{ 1, 0}};//·½Ïò 
-int xl=20,yl=12;//µØÍ¼µÄ³¤ºÍ¿í(²»°üÀ¨±ß½ç) 
-int d=2;//µ±Ç°ÉßµÄ·½Ïò 
-COORD head;//ÉßÍ·×ø±ê 
-int room[32][32];//ÓÃÓÚ´¢´æµØÍ¼ 
-void go(int x,int y)  //¹â±êÒÆ¶¯º¯Êı£¬X±íÊ¾ºá×ø±ê£¬Y±íÊ¾×İ×ø±ê¡£
-{
-    COORD coord;         //Ê¹ÓÃÍ·ÎÄ¼ş×Ô´øµÄ×ø±ê½á¹¹
-    coord.X=x*2;            //ÕâÀï½«intÀàĞÍÖµ´«¸øshort,²»¹ı³ÌĞòÖĞÉæ¼°µÄ×ø±êÖµ¾ù²»»á³¬¹ıshort·¶Î§
-    coord.Y=y;
-    HANDLE a=GetStdHandle(STD_OUTPUT_HANDLE);  //»ñµÃ±ê×¼Êä³ö¾ä±ú
-    SetConsoleCursorPosition(a,coord);         //ÒÔ±ê×¼Êä³öµÄ¾ä±úÎª²ÎÊıÉèÖÃ¿ØÖÆÌ¨¹â±ê×ø±ê
-}
-void move()//ÉßµÄÒÆ¶¯ 
-{
-	head.X+=fangxiang[d][0];
-	head.Y+=fangxiang[d][1];//ÉßÍ·Ïò´Ë·½ÏòÒÆ¶¯ 
-	if(room[head.Y][head.X]!=0&&room[head.Y][head.X]!=-2)//Èç¹ûÉßÍ·Î»ÖÃ²»ÊÇ¿ÕµÄ»òÊ³Îï 
-	{
-		return;//½áÊøº¯Êı£¬²»¸Ä±äroomÊı×é£¬ÔÚÖ÷º¯ÊıÖĞÅĞ¶ÏÉßÍ·´¦ÊÇ·ñÎ´±»¸Ä±äÒÔÅĞ¶¨ÊÇ·ñ×²µ½ 
-	}
-	if(room[head.Y][head.X]==-2)//Èç¹ûÉßÍ·Î»ÖÃÊÇÊ³Îï 
-	{
-		len++;//³¤¶È++ 
-		food=0;//Ê³Îï×´Ì¬±äÎª²»´æÔÚ 
-	}
-	for(int i=1;i<=xl+1;i++) 
-		for(int j=1;j<=yl+1;j++)//ËÑË÷ 
-			if(room[j][i]>=1)//Èç¹û´ËÎ»ÖÃÓĞÉß 
-				if(room[head.Y][head.X]!=-2)//»¹Òª±£Ö¤´ËÎ»ÖÃ²»ÊÇÊ³Îï 
-				{
-					room[j][i]--;//´ËÎ»ÖÃÊıÖµ-1,Ê¹´ËÎ»ÖÃÔÚÉßÖĞµÄÎ»ÖÃÍùºó±ä»¯,ÉßÎ²±äÎª¿Õ 
-					if(room[j][i]==0)//Èç¹û´ËÎ»ÖÃÊÇ±äÎª¿ÕµÄÉßÎ² 
-					{
-						go(i,j);printf("  ");//Çå¿Õ 
-					}
-				}
-				
-	room[head.Y][head.X]=len;//ÉßÍ·´¦ÉèÎªÉßµÄ³¤¶È,Ò²¾ÍÊÇµÚ1½Ú 
-	
-	go(head.X,head.Y);printf("¡õ");//´òÓ¡ÉßÍ· 
-}
-void makefood()//Éú³ÉÊ³Îï 
-{
-	int randx=getrand(1,xl),randy=getrand(1,yl);//Ëæ»úµÚÒ»×é×ø±ê 
-	while(room[randy][randx]!=0)//Èç¹ûËæ»úµÄÎ»ÖÃ²»Îª¿Õ 
-	{
-		randx=getrand(1,xl); 
-		randy=getrand(1,yl);//ÖØĞÂËæ»ú×ø±ê 
-	}
-	room[randy][randx]=-2;//ÉèÖÃ´ËÎ»ÖÃÎªÊ³Îï 
-	go(randx,randy);
-	printf("¡ñ");//´òÓ¡Ê³Îï 
-	food=1;//Ê³Îï×´Ì¬ÉèÎª´æÔÚ 
-}
-int main()//Ö÷º¯Êı 
-{
-	CONSOLE_CURSOR_INFO cursor_info={1,0};
-	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);//Òş²Ø¹â±ê 
+int len = 10;           //è›‡çš„é•¿åº¦
+int food = 1;           //ç°åœ¨æ˜¯å¦å­˜åœ¨é£Ÿç‰©
+int dirs[5][2] = {{ 0, 0},{ 0,-1},{ 0, 1},{-1, 0},{ 1, 0}};//æ–¹å‘
+int xl = 20,yl = 12;    //åœ°å›¾çš„é•¿å’Œå®½(ä¸åŒ…æ‹¬è¾¹ç•Œ)
+int direction = 2;      //å½“å‰è›‡çš„æ–¹å‘
+COORD head;             //è›‡å¤´åæ ‡
+int room[32][32];       //ç”¨äºå‚¨å­˜åœ°å›¾
 
-	unsigned seed=time(0);
-    srand(seed);//ÉèÖÃËæ»úÊıÖÖ×Ó 
-    
-	for(int i=0;i<=yl+1;i++)
-		for(int j=0;j<=xl+1;j++)
-			if(i==0||i==yl+1||j==0||j==xl+1)
-			{
-				room[i][j]=-1;
-				go(j,i);
-				printf("¡ö");
-			}//ÉèÖÃ±ß½ç  ´òÓ¡µØÍ¼
-			
-	makefood();//Éú³ÉµÚÒ»¸öÊ³Îï 
-	
-	while(!kbhit()) {Sleep(10);} //°´ÏÂ°´¼üÇ°²»×ö³öÈÎºÎ¶¯×÷ 
-	
-	d=-3;//³õÊ¼»¯·½ÏòÎª¸ºÊıÊ¹Æä²»ÓëÆäËû·½Ïò³åÍ» 
-    head.X=xl/2+1; 
-    head.Y=yl/2+1;//ÉèÖÃÉßÍ·Î»ÖÃÎªÖĞĞÄ
-    room[head.Y][head.X]=len; //ÉßÍ·´¦ÎªÉß³¤ 
-	go(head.X,head.Y);printf("¡õ");//´òÓ¡ÉßÍ· 
-	
-	while(1)
-	{
-		int ld=d;//´¢´æÎ´¸ü¸ÄµÄ·½Ïò 
-		int key=-1;
-		for(int i=1;i<=25;i++)//·Ö¶à¸öÊ±¼äµã¼ì²â·½Ïò,¶ø²»ÊÇÖ»ÓĞÒ»¸öÊ±¼äµã,ÕâÑù¿ÉÒÔÌáÉı²Ù×÷ÊÖ¸Ğ 
-		{
-			if(kbhit()&&key==-1)//Èç¹ûÓĞ°´¼ü°´ÏÂÇÒÎ´Ôø¶ÁÈ¡°´¼ü£¨Ê¹Í¬Ò»Ê±¼äµ¥Î»ÄÚ°´ÏÂ¶à´ÎÊ±²»¸²¸ÇÇ°Ò»´Î°´¼ü£¬¶øÊÇµÈµ½ÏÂÒ»Ê±¼äµ¥Î»¶ÁÈ¡²¢×ö³öÏàÓ¦·´À¡£¬·½±ãÊµÏÖµôÍ·µÈ²Ù×÷£© 
-			{
-				key=getch();//¶ÁÈ¡ 
-				if(key==224)//¶ÁÈ¡·½Ïò¼üÊ±Ğè¶ÁÈ¡Á½´Î,µÚÒ»´Î±Ø¶¨ÊÇ224,ËùÒÔÅĞ¶Ï¶ÁÈëµÄÊÇ·½Ïò¼üÊ±ÔòÔÙ¶ÁÈ¡Ò»´Î 
-				{
-					key=getch();
-					     if(key==72) d=1;//ÉÏ 
-					else if(key==80) d=2;//ÏÂ 
-					else if(key==75) d=3;//×ó 
-					else if(key==77) d=4;//ÓÒ				
-				}
-			} 
-			Sleep(5);		
-		}
-		if(ld!=d&&(ld+d==3||ld+d==7)) d=ld;//Èç¹û¸ü¸ÄºóµÄ·½ÏòÓëÔ­À´µÄ·½Ïò³åÍ»(³É·´·½Ïò),²»¸Ä±ä·½Ïò 
-		move();//ÒÆ¶¯Éß 
-		if(room[head.Y][head.X]!=len)//Èç¹ûÉßÍ·Î»ÖÃµÄÊı²»µÈÓÚÉßµÄ³¤¶È(ËµÃ÷ÒÆ¶¯º¯ÊıÖĞÅĞ¶¨Îª×²µ½,Î´¸Ä±äÉßÍ·ÊıÖµ) 
-		{
-			go(0,yl+3);//Ê¹½áÊø·´À¡²»ÕÚµ²»­Ãæ 
-			Sleep(250);
-			return 0;//½áÊø³ÌĞò 
-		}
-		
-		if(food==0) makefood();//Èç¹û³¡ÉÏÃ»ÓĞÊ³Îï,ÔòÉú³ÉÒ»¸öÊ³Îï 
-	}	
-	return 0;//½áÊø³ÌĞò 
+void go(int x,int y)  //å…‰æ ‡ç§»åŠ¨å‡½æ•°ï¼ŒXè¡¨ç¤ºæ¨ªåæ ‡ï¼ŒYè¡¨ç¤ºçºµåæ ‡ã€‚
+{
+    COORD coord;         //ä½¿ç”¨å¤´æ–‡ä»¶è‡ªå¸¦çš„åæ ‡ç»“æ„
+    coord.X = x * 2;            //è¿™é‡Œå°†intç±»å‹å€¼ä¼ ç»™short,ä¸è¿‡ç¨‹åºä¸­æ¶‰åŠçš„åæ ‡å€¼å‡ä¸ä¼šè¶…è¿‡shortèŒƒå›´
+    coord.Y = y;
+    HANDLE a = GetStdHandle(STD_OUTPUT_HANDLE);  //è·å¾—æ ‡å‡†è¾“å‡ºå¥æŸ„
+    SetConsoleCursorPosition(a,coord);         //ä»¥æ ‡å‡†è¾“å‡ºçš„å¥æŸ„ä¸ºå‚æ•°è®¾ç½®æ§åˆ¶å°å…‰æ ‡åæ ‡
+}
+
+void move()//è›‡çš„ç§»åŠ¨
+{
+    head.X += dirs[direction][0];
+    head.Y += dirs[direction][1];//è›‡å¤´å‘æ­¤æ–¹å‘ç§»åŠ¨
+    if(room[head.Y][head.X] != 0 && room[head.Y][head.X] != -2)//å¦‚æœè›‡å¤´ä½ç½®ä¸æ˜¯ç©ºçš„æˆ–é£Ÿç‰©
+        return;//ç»“æŸå‡½æ•°ï¼Œä¸æ”¹å˜roomæ•°ç»„ï¼Œåœ¨ä¸»å‡½æ•°ä¸­åˆ¤æ–­è›‡å¤´å¤„æ˜¯å¦æœªè¢«æ”¹å˜ä»¥åˆ¤å®šæ˜¯å¦æ’åˆ°
+
+    if(room[head.Y][head.X] == -2)//å¦‚æœè›‡å¤´ä½ç½®æ˜¯é£Ÿç‰©
+    {
+        len++;//é•¿åº¦++
+        food = 0;//é£Ÿç‰©çŠ¶æ€å˜ä¸ºä¸å­˜åœ¨
+    }
+    for(int i = 1;i <= xl + 1;i++)
+        for(int j = 1;j <= yl + 1;j++)//æœç´¢
+            if(room[j][i] >= 1)//å¦‚æœæ­¤ä½ç½®æœ‰è›‡
+                if(room[head.Y][head.X] != -2)//è¿˜è¦ä¿è¯æ­¤ä½ç½®ä¸æ˜¯é£Ÿç‰©
+                {
+                    room[j][i]--;//æ­¤ä½ç½®æ•°å€¼-1,ä½¿æ­¤ä½ç½®åœ¨è›‡ä¸­çš„ä½ç½®å¾€åå˜åŒ–,è›‡å°¾å˜ä¸ºç©º
+                    if(room[j][i] == 0)//å¦‚æœæ­¤ä½ç½®æ˜¯å˜ä¸ºç©ºçš„è›‡å°¾
+                    {
+                        go(i,j);printf("  ");//æ¸…ç©º
+                    }
+                }
+
+    room[head.Y][head.X] = len;//è›‡å¤´å¤„è®¾ä¸ºè›‡çš„é•¿åº¦,ä¹Ÿå°±æ˜¯ç¬¬1èŠ‚
+
+    go(head.X,head.Y);printf("â–¡");//æ‰“å°è›‡å¤´
+}
+void createFood()//ç”Ÿæˆé£Ÿç‰©
+{
+    int randx = getrand(1,xl),randy = getrand(1,yl);//éšæœºç¬¬ä¸€ç»„åæ ‡
+    while(room[randy][randx]!=0)//å¦‚æœéšæœºçš„ä½ç½®ä¸ä¸ºç©º
+    {
+        randx = getrand(1,xl);
+        randy = getrand(1,yl);//é‡æ–°éšæœºåæ ‡
+    }
+    room[randy][randx] = -2;//è®¾ç½®æ­¤ä½ç½®ä¸ºé£Ÿç‰©
+    go(randx,randy);
+    printf("â—");//æ‰“å°é£Ÿç‰©
+    food=1;//é£Ÿç‰©çŠ¶æ€è®¾ä¸ºå­˜åœ¨
+}
+
+int main()//ä¸»å‡½æ•°
+{
+    CONSOLE_CURSOR_INFO cursor_info = {1,0};
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);//éšè—å…‰æ ‡
+
+    unsigned seed = time(0);
+    srand(seed);//è®¾ç½®éšæœºæ•°ç§å­
+
+    for(int i=0;i <= yl+1;i++)
+        for(int j=0;j <= xl+1;j++)
+            if(i == 0 || i == yl + 1 || j == 0 || j == xl + 1)
+            {
+                room[i][j] = -1;
+                go(j,i);
+                printf("â– ");
+            }//è®¾ç½®è¾¹ç•Œ  æ‰“å°åœ°å›¾
+
+    createFood();//ç”Ÿæˆç¬¬ä¸€ä¸ªé£Ÿç‰©
+
+    while(!kbhit())
+        Sleep(10); //æŒ‰ä¸‹æŒ‰é”®å‰ä¸åšå‡ºä»»ä½•åŠ¨ä½œ
+
+    direction = -3;//åˆå§‹åŒ–æ–¹å‘ä¸ºè´Ÿæ•°ä½¿å…¶ä¸ä¸å…¶ä»–æ–¹å‘å†²çª
+    head.X = xl / 2 + 1;
+    head.Y = yl / 2 + 1;//è®¾ç½®è›‡å¤´ä½ç½®ä¸ºä¸­å¿ƒ
+    room[head.Y][head.X] = len; //è›‡å¤´å¤„ä¸ºè›‡é•¿
+    go(head.X,head.Y);printf("â–¡");//æ‰“å°è›‡å¤´
+
+    while(true)
+    {
+        int dirBefore = direction;//å‚¨å­˜æœªæ›´æ”¹çš„æ–¹å‘
+        int key = -1;
+        for(int i = 1;i <= 25;i++)//åˆ†å¤šä¸ªæ—¶é—´ç‚¹æ£€æµ‹æ–¹å‘,è€Œä¸æ˜¯åªæœ‰ä¸€ä¸ªæ—¶é—´ç‚¹,è¿™æ ·å¯ä»¥æå‡æ“ä½œæ‰‹æ„Ÿ
+        {
+            if(kbhit() && key == -1)//å¦‚æœæœ‰æŒ‰é”®æŒ‰ä¸‹ä¸”æœªæ›¾è¯»å–æŒ‰é”®ï¼ˆä½¿åŒä¸€æ—¶é—´å•ä½å†…æŒ‰ä¸‹å¤šæ¬¡æ—¶ä¸è¦†ç›–å‰ä¸€æ¬¡æŒ‰é”®ï¼Œè€Œæ˜¯ç­‰åˆ°ä¸‹ä¸€æ—¶é—´å•ä½è¯»å–å¹¶åšå‡ºç›¸åº”åé¦ˆï¼Œæ–¹ä¾¿å®ç°æ‰å¤´ç­‰æ“ä½œï¼‰
+            {
+                key = getch();//è¯»å–
+                if(key == 224)//è¯»å–æ–¹å‘é”®æ—¶éœ€è¯»å–ä¸¤æ¬¡,ç¬¬ä¸€æ¬¡å¿…å®šæ˜¯224,æ‰€ä»¥åˆ¤æ–­è¯»å…¥çš„æ˜¯æ–¹å‘é”®æ—¶åˆ™å†è¯»å–ä¸€æ¬¡
+                {
+                    key = getch();
+
+                    switch(key)
+                    {
+                        case 72: direction = 1;break;//ä¸Š
+                        case 80: direction = 2;break;//ä¸‹
+                        case 75: direction = 3;break;//å·¦
+                        case 77: direction = 4;break;//å³
+                    }
+                }
+            }
+            Sleep(5);
+        }
+        if(dirBefore != direction && ( dirBefore + direction == 3 || dirBefore + direction == 7))
+            direction = dirBefore;//å¦‚æœæ›´æ”¹åçš„æ–¹å‘ä¸åŸæ¥çš„æ–¹å‘å†²çª(æˆåæ–¹å‘),ä¸æ”¹å˜æ–¹å‘
+
+        move();//ç§»åŠ¨è›‡
+
+        if(room[head.Y][head.X] != len)//å¦‚æœè›‡å¤´ä½ç½®çš„æ•°ä¸ç­‰äºè›‡çš„é•¿åº¦(è¯´æ˜ç§»åŠ¨å‡½æ•°ä¸­åˆ¤å®šä¸ºæ’åˆ°,æœªæ”¹å˜è›‡å¤´æ•°å€¼)
+        {
+            go(0,yl+3);//ä½¿ç»“æŸåé¦ˆä¸é®æŒ¡ç”»é¢
+            Sleep(250);
+            return 0;//ç»“æŸç¨‹åº
+        }
+
+        if(food==0)
+            createFood();//å¦‚æœåœºä¸Šæ²¡æœ‰é£Ÿç‰©,åˆ™ç”Ÿæˆä¸€ä¸ªé£Ÿç‰©
+    }
+    return 0;//ç»“æŸç¨‹åºï¼ˆè™½ç„¶æ²¡å•¥ç”¨ï¼‰
 }
